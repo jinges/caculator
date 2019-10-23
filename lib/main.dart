@@ -38,6 +38,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String _equation = '';
+  String _result = '';
+
+  void _computeRes(String res){
+    setState(() {
+      _equation = res;
+      _result = res;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Expanded(
             flex: 1,
-            child: ScreenWidget(),
+            child: ScreenWidget(equation: _equation, result: _result),
           ),
           Container(
             height: 1.0,
@@ -56,7 +66,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             flex: 2,
-            child: Keyboard(),
+            child: KeyBoardWidget(onChange: _computeRes),
           ),
         ],
        ),

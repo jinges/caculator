@@ -8,7 +8,9 @@
 import 'package:flutter/material.dart';
 
 class ScreenWidget extends StatefulWidget {
-  ScreenWidget({Key key}) : super(key: key);
+  final String equation;
+  final String result;
+  ScreenWidget({Key key, this.equation, this.result}) : super(key: key);
 
   @override
   _ScreenWidgetState createState() => _ScreenWidgetState();
@@ -25,7 +27,7 @@ class _ScreenWidgetState extends State<ScreenWidget> {
         textDirection: TextDirection.rtl,
         children: <Widget>[
           Text(
-            '10',
+            widget.equation,
             textAlign: TextAlign.right,
             style: TextStyle(
               decoration: TextDecoration.none,
@@ -34,7 +36,7 @@ class _ScreenWidgetState extends State<ScreenWidget> {
             ),
           ),
           Text(
-            '12',
+            widget.result,
             textAlign: TextAlign.right,
             style: TextStyle(
               decoration: TextDecoration.none,
