@@ -6,7 +6,6 @@
  */
 
 import 'dart:html';
-
 import 'package:flutter/material.dart';
 
 class KeyBoardWidget extends StatefulWidget {
@@ -25,27 +24,12 @@ class _KeyBoardWidgetState extends State<KeyBoardWidget> {
   static const rowFive = ['-', '0', '.', '='];
   static const operators = [...rowOne, ...rowTwo, ...rowThree, ...rowFour, ...rowFive];
 
-  var keyList = [];
+  // var keyList = [];
+  // Parser p = new Parser();
 
   void _getKey(key){
-    print('$keyList');
-    print(keyList.lastIndexOf('+'));
-
-    if(key == 'C') {
-      print(keyList.removeLast());
-    } else {
-      keyList.add(key);
-    }
-    print('$keyList');
-    
-    try{
-      print(double.parse(keyList.join('')));
-      print('====================');
-    } catch(e){
-      print('$e');
-    }
     setState(() {
-      
+      widget.onChange(key);
     });
   }
 
@@ -79,15 +63,17 @@ class _KeyBoardState extends State<KeyBoard> {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
+    return GestureDetector(
       child: Text(
         widget.keyText,
+        textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 32.0,
-          color: Colors.white
+          decoration: TextDecoration.none,
+          color: Colors.white,
         ),
       ),
-      onPressed: _getKey,
+      onTap: _getKey,
     );
   }
 }

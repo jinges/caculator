@@ -1,6 +1,5 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 import './screen.dart';
 import './keyboard.dart';
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
       ),
       home: HomePage(),
     );
@@ -38,13 +37,52 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<String> keyList = [];
   String _equation = '';
   String _result = '';
+  Parser p = Parser();
+  RegExp numReg = RegExp(r'[\d\.]');
+  RegExp operReg = RegExp(r'[\+\-|*\/\.]');
 
-  void _computeRes(String res){
+  String _cumputeRes(keyList){
+    Expression exp = p.parse(keyList.join(''));
+    String result = exp.evaluate(EvaluationType.REAL, null).toString();
+    return result;
+  }
+
+  void _getKeyStr(key) {
+    _result = '';
+
+    if (key == 'C') {
+      keyList.clear();
+      _equation = '';
+    } else {
+      if (key == '=') {
+        //清空表达式，得到结果,不用追加最后的“=”
+        _equation = _cumputeRes(keyList);
+        keyList.clear();
+      } else if (numReg.hasMatch(key)) {
+        //按下数字
+        keyList.add(key);
+        _equation = keyList.join('');
+      } else {
+        //运算符，非number
+        //最后一个字符是运算符，不处理
+        var lastNum = keyList[keyList.length - 1];
+        if(operReg.hasMatch(lastNum)) {
+          return;
+        }
+        if(operReg.hasMatch(keyList.join(''))) {
+          //存在运算符,可以计算结果
+          _result = _cumputeRes(keyList);
+        }
+        keyList.add(key);
+        _equation = keyList.join('');
+      }
+    }
     setState(() {
-      _equation = res;
-      _result = res;
+      _equation = _equation;
+      _result = _result;
     });
   }
 
@@ -53,7 +91,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       color: Colors.black87,
       child: Flex(
-        direction:  Axis.vertical,
+        direction: Axis.vertical,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
@@ -66,10 +104,10 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             flex: 2,
-            child: KeyBoardWidget(onChange: _computeRes),
+            child: KeyBoardWidget(onChange: _getKeyStr),
           ),
         ],
-       ),
+      ),
     );
   }
 }
