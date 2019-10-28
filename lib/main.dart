@@ -68,8 +68,8 @@ class _HomePageState extends State<HomePage> {
       } else {
         //运算符，非number
         //最后一个字符是运算符，不处理
-        var lastNum = keyList[keyList.length - 1];
-        if(operReg.hasMatch(lastNum)) {
+        var lastNum = keyList.last;
+        if(operReg.hasMatch(lastNum) && key != '()') {
           return;
         }
         if(operReg.hasMatch(keyList.join(''))) {
