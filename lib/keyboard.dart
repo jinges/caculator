@@ -17,11 +17,11 @@ class KeyBoardWidget extends StatefulWidget {
 }
 
 class _KeyBoardWidgetState extends State<KeyBoardWidget> {
-  static const rowOne = ['C', '()', '%', '/'];
-  static const rowTwo = ['7', '8', '9', '*'];
+  static const rowOne = ['CE', 'C', '‹', '÷'];
+  static const rowTwo = ['7', '8', '9', '×'];
   static const rowThree = ['4', '5', '6', '-'];
   static const rowFour = ['1', '2', '3', '+'];
-  static const rowFive = ['-', '0', '.', '='];
+  static const rowFive = ['±', '0', '.', '='];
   static const operators = [...rowOne, ...rowTwo, ...rowThree, ...rowFour, ...rowFive];
 
   // var keyList = [];

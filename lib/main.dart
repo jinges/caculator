@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.purple,
       ),
+      debugShowCheckedModeBanner: false,
       home: HomePage(),
     );
   }
@@ -41,43 +42,55 @@ class _HomePageState extends State<HomePage> {
   String _equation = '';
   String _result = '';
   Parser p = Parser();
+  bool isOpe = false;
   RegExp numReg = RegExp(r'[\d\.]');
-  RegExp operReg = RegExp(r'[\+\-|*\/\.]');
+  RegExp operReg = RegExp(r'[\+\-\*\/]');
 
-  String _cumputeRes(keyList){
-    Expression exp = p.parse(keyList.join(''));
+  String _cumputeRes(_equation){
+    var _equStr = _equation.replaceAll(RegExp(r'×'), '*').replaceAll(RegExp(r'÷'), '/');
+    Expression exp = p.parse(_equStr);
     String result = exp.evaluate(EvaluationType.REAL, null).toString();
     return result;
   }
 
   void _getKeyStr(key) {
-    _result = '';
-
     if (key == 'C') {
       keyList.clear();
       _equation = '';
     } else {
       if (key == '=') {
         //清空表达式，得到结果,不用追加最后的“=”
-        _equation = _cumputeRes(keyList);
+        keyList.add(_result);
+        _equation = keyList.join('');
+        _result = _cumputeRes(_equation);
+        _equation = '';
         keyList.clear();
+        isOpe = true;
       } else if (numReg.hasMatch(key)) {
         //按下数字
-        keyList.add(key);
-        _equation = keyList.join('');
+        if(operReg.hasMatch(_result) && key == '.') {
+          key = '0.';
+        }
+        _result = isOpe? key: _result + key;
+        isOpe = false;
+      } else if(key == '±'){
+        var newNum = double.parse(_result);
+        _result = (-1 * newNum).toString();
       } else {
         //运算符，非number
-        //最后一个字符是运算符，不处理
-        var lastNum = keyList.last;
-        if(operReg.hasMatch(lastNum) && key != '()') {
-          return;
+        if(_result.startsWith('-')) {
+          _result = "($_result)";
         }
-        if(operReg.hasMatch(keyList.join(''))) {
+        keyList.add(_result);
+        _equation = keyList.join('');
+        if(operReg.hasMatch(_equation)) {
           //存在运算符,可以计算结果
-          _result = _cumputeRes(keyList);
+          _result = _cumputeRes(_equation);
         }
+        isOpe = true;
         keyList.add(key);
         _equation = keyList.join('');
+        // print('$_result ,  $keyList');
       }
     }
     setState(() {
